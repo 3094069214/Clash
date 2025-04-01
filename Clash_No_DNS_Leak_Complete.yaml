@@ -1,6 +1,3 @@
-# ========== Clash 完整配置 - 移动设备优化版 ==========
-# 适合直接上传到GitHub并通过URL引用
-
 # ========== Emoji配置 ==========
 emoji:
   # 基础国旗映射
@@ -119,7 +116,7 @@ tun:
   auto-route: true
   auto-detect-interface: true
   strict-route: false
-  mtu: 1500 # 改为1500，更符合标准网络MTU值，提高兼容性
+  mtu: 1280
   inet4-route-address:
     - 0.0.0.0/1
     - 128.0.0.0/1
@@ -128,7 +125,7 @@ tun:
     - 0
     - 10
   stack-option:
-    mtu: 1500 # 保持与上面一致
+    mtu: 1280
     gso: true
 
 # DNS配置
@@ -187,18 +184,6 @@ dns:
     - '*.aliyuncs.com'
     - '*.csdn.net'
     - '*.netease.com'
-    # 增加更多流行应用的DNS过滤
-    - '*.bytedance.com'
-    - '*.byteimg.com'
-    - '*.zhihu.com'
-    - '*.zhimg.com'
-    - '*.gtimg.com'
-    - '*.mi.com'
-    - '*.hoyoverse.com'
-    - '*.yuanshen.com'
-    - 'audio-ap-web.kefu.qq.com'
-    - 'dns.weixin.qq.com'
-    - 'dns.weixin.qq.com.cn'
   use-hosts: true
   nameserver-cache-size: 4096
   cache-size: 8192
@@ -538,48 +523,29 @@ proxy-groups:
     type: select
     filter: '^(?!.*(港|hongkong|hk|台|taiwan|tw|新|狮|獅|singapore|sg|日|japan|jp|美|states|us)).*$'
 
-
 # ========== 分流规则配置 ==========
 rules:
-  # 优先级高的应用 - 先处理这些规则可以提高匹配效率
+  # 本地网络和基础规则
   - RULE-SET,https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/private.txt,DIRECT
+
+  # 广告和隐私保护
   - RULE-SET,https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Advertising/Advertising.yaml,💩广告
 
-  # 添加常见国内应用直连规则
-  - DOMAIN-SUFFIX,alicdn.com,🛩️墙内
-  - DOMAIN-SUFFIX,aliyuncs.com,🛩️墙内
-  - DOMAIN-SUFFIX,baidu.com,🛩️墙内
-  - DOMAIN-SUFFIX,bdstatic.com,🛩️墙内
-  - DOMAIN-SUFFIX,qq.com,🛩️墙内
-  - DOMAIN-SUFFIX,gtimg.com,🛩️墙内
-  - DOMAIN-SUFFIX,tencent.com,🛩️墙内
-  - DOMAIN-SUFFIX,idqqimg.com,🛩️墙内
-  - DOMAIN-SUFFIX,zhihu.com,🛩️墙内
-  - DOMAIN-SUFFIX,zhimg.com,🛩️墙内
-
-  # 游戏平台优化 - 放在更前面降低延迟
-  - RULE-SET,https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Game/Game.list,🎮游戏平台
-  - DOMAIN-SUFFIX,steampowered.com,🎮游戏平台
-  - DOMAIN-SUFFIX,steamcommunity.com,🎮游戏平台
-  - DOMAIN-SUFFIX,epicgames.com,🎮游戏平台
-  - DOMAIN-SUFFIX,battlenet.com.cn,🎮游戏平台
-  - DOMAIN-SUFFIX,blizzard.com,🎮游戏平台
-
-  # AI服务和开发工具
-  - RULE-SET,https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/AI/AI.yaml,🤖AI
-  # 细化AI规则
-  - DOMAIN-SUFFIX,openai.com,🤖AI
-  - DOMAIN-SUFFIX,openai.org,🤖AI
-  - DOMAIN-SUFFIX,anthropic.com,🤖AI
-  - DOMAIN-SUFFIX,claude.ai,🤖AI
-  - DOMAIN-SUFFIX,gemini.google.com,🤖AI
-  - DOMAIN-SUFFIX,bard.google.com,🤖AI
+  # 开发工具和AI服务
   - RULE-SET,https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Developer/Developer.yaml,🧰开发工具
   - RULE-SET,https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/GitHub/GitHub.list,🧰开发工具
+  - RULE-SET,https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/AI/AI.yaml,🤖AI
 
-  # 社交媒体平台 - 移除重复的Telegram规则
+  # 即时通讯
   - RULE-SET,https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Telegram/Telegram.list,📱电报
   - RULE-SET,https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/telegramcidr.txt,📱电报
+
+  # 国际平台服务
+  - RULE-SET,https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Google/Google.list,🛡️Google服务
+  - RULE-SET,https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Apple/Apple.list,🍎苹果服务
+  - RULE-SET,https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Microsoft/Microsoft.list,Ⓜ️微软服务
+
+  # 社交媒体平台
   - RULE-SET,https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Twitter/Twitter.list,📲社交媒体
   - RULE-SET,https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Instagram/Instagram.list,📲社交媒体
   - RULE-SET,https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Facebook/Facebook.list,📲社交媒体
@@ -587,40 +553,26 @@ rules:
   - RULE-SET,https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Reddit/Reddit.list,📲社交媒体
   - RULE-SET,https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Discord/Discord.list,📲社交媒体
 
-  # 流媒体服务 - 细化处理
+  # 游戏平台
+  - RULE-SET,https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Game/Game.list,🎮游戏平台
+
+  # 流媒体服务
+  - RULE-SET,https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/GlobalMedia/GlobalMedia.list,🎬流媒体
   - RULE-SET,https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Netflix/Netflix.list,🎬Netflix
   - RULE-SET,https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/YouTube/YouTube.list,🎬YouTube
   - RULE-SET,https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Spotify/Spotify.list,🟢Spotify
   - RULE-SET,https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/BiliBili/BiliBili.list,📺B站
-  - RULE-SET,https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/GlobalMedia/GlobalMedia.list,🎬流媒体
-
-  # 国际平台服务
-  - RULE-SET,https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Google/Google.list,🛡️Google服务
-  - RULE-SET,https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Apple/Apple.list,🍎苹果服务
-  - RULE-SET,https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Microsoft/Microsoft.list,Ⓜ️微软服务
-
-  # 添加专用邮件分流规则
-  - DOMAIN-SUFFIX,gmail.com,📧邮件服务
-  - DOMAIN-SUFFIX,outlook.com,📧邮件服务
-  - DOMAIN-SUFFIX,mail.yahoo.com,📧邮件服务
-  - DOMAIN-SUFFIX,mail.protonmail.com,📧邮件服务
 
   # 国内服务
   - RULE-SET,https://raw.githubusercontent.com/moistrr/Clashruleset/refs/heads/main/config/zhilian.list,🛩️墙内
   - RULE-SET,https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/ChinaMax/ChinaMax.list,🛩️墙内
 
-  # 搜索引擎分流
-  - DOMAIN-SUFFIX,google.com,🔎搜索引擎
-  - DOMAIN-SUFFIX,bing.com,🔎搜索引擎
-  - DOMAIN-SUFFIX,duckduckgo.com,🔎搜索引擎
-  - DOMAIN-SUFFIX,yandex.com,🔎搜索引擎
-
   # 国外集合规则
-  - RULE-SET,https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/gfw.txt,✈️起飞
   - RULE-SET,https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/proxy.txt,✈️起飞
 
   # 高效域名集
   - RULE-SET,https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/direct.txt,🛩️墙内
+  - RULE-SET,https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/gfw.txt,✈️起飞
 
   # GeoIP规则
   - GEOIP,LAN,🛩️墙内,no-resolve
